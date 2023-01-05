@@ -1,0 +1,308 @@
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using MySql.Data;
+using MySql.Data.MySqlClient;
+using System.Configuration;
+
+
+namespace _2TIA
+{
+    public partial class Form1 : Form
+    {
+
+        
+        string identificador;
+        int selectedRow;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = ListaAlunos();
+        }
+
+        private DataTable ListaAlunos()
+        {
+            DataTable dtAlunos = new DataTable();
+            string connString = ConfigurationManager.ConnectionStrings["2tia"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(connString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM cadastro", con))
+                {
+                    con.Open();
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    dtAlunos.Load(reader);
+                }
+            }
+            return dtAlunos;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string conString = "dataSource = localhost;port=3306;username=root";
+            string query = "INSERT INTO 2tia.cadastro (nome,login,senha) VALUES (@nome, @login, @senha)";
+
+            MySqlConnection conDatabase = new MySqlConnection(conString);
+            MySqlCommand cmdDataBase = new MySqlCommand(query, conDatabase);
+            MySqlDataReader myReader;
+
+            cmdDataBase.Parameters.AddWithValue("@nome", textBox1.Text);
+            cmdDataBase.Parameters.AddWithValue("@login", textBox2.Text);
+            cmdDataBase.Parameters.AddWithValue("@senha", textBox3.Text);
+            
+            conDatabase.Open();
+            myReader = cmdDataBase.ExecuteReader();
+            dataGridView1.DataSource = ListaAlunos(); //atualiza o datagridView
+
+            while (myReader.Read())
+            {
+
+            }
+            conDatabase.Close();
+
+
+            /*
+            DataTable dt = new DataTable();
+            string connString = ConfigurationManager.ConnectionStrings["2tia"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(connString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand("INSERT INTO cadastro(nome, email, curso)" +
+                    "VALUES('" + textBox1.Text + "','" + textBox2.Text + "','" + textBox3.Text + "')", con))
+                {
+                    con.Open();
+                    MySqlDataReader rd = cmd.ExecuteReader();
+                    rd.Close();
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            MessageBox.Show("Dados inserido com sucesso!");
+                            rd.Close();
+                            con.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Dados não foram inseridos!");
+                            con.Close();
+                        }
+                    }catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    dt.Load(rd);
+                    con.Close();
+                }
+            } */
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            selectedRow = e.RowIndex;
+            DataGridViewRow row = dataGridView1.Rows[selectedRow];
+
+            identificador = row.Cells[0].Value.ToString();
+            textBox1.Text = row.Cells[1].Value.ToString();
+            textBox2.Text = row.Cells[2].Value.ToString();
+            textBox3.Text = row.Cells[3].Value.ToString();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+           DataTable dt = new DataTable();
+            string connString = ConfigurationManager.ConnectionStrings["2tia"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(connString))
+            {
+                int idd = Convert.ToInt32(identificador);
+                using (MySqlCommand cmd = new MySqlCommand("UPDATE cadastro SET nome=@nome, login=@login, senha=@senha WHERE idAluno=" + idd,con))
+                        {
+                cmd.Parameters.AddWithValue("@nome", textBox1.Text);
+                cmd.Parameters.AddWithValue("@login", textBox2.Text);
+                cmd.Parameters.AddWithValue("@senha", textBox3.Text);
+                con.Open();
+                MySqlDataReader reader = cmd.ExecuteReader();
+                dt.Load(reader);
+                reader.Close();
+                dataGridView1.DataSource = ListaAlunos();
+                
+
+            }
+            }
+        }
+    }
+}
+
+
+/////////AGORA↗
+/////////ANTES↡
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using MySql.Data;
+using MySql.Data.MySqlClient;
+using System.Configuration;
+
+
+namespace _2TIA
+{
+    public partial class Form1 : Form
+    {
+
+        
+        string identificador;
+        int selectedRow;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = ListaAlunos();
+        }
+
+        private DataTable ListaAlunos()
+        {
+            DataTable dtAlunos = new DataTable();
+            string connString = ConfigurationManager.ConnectionStrings["2tia"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(connString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM cadastro", con))
+                {
+                    con.Open();
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    dtAlunos.Load(reader);
+                }
+            }
+            return dtAlunos;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string conString = "dataSource = localhost;port=3306;username=root";
+            string query = "INSERT INTO 2tia.cadastro (nome,email,curso) VALUES (@nome, @email, @curso)";
+
+            MySqlConnection conDatabase = new MySqlConnection(conString);
+            MySqlCommand cmdDataBase = new MySqlCommand(query, conDatabase);
+            MySqlDataReader myReader;
+
+            cmdDataBase.Parameters.AddWithValue("@nome", textBox1.Text);
+            cmdDataBase.Parameters.AddWithValue("@email", textBox2.Text);
+            cmdDataBase.Parameters.AddWithValue("@curso", textBox3.Text);
+            
+            conDatabase.Open();
+            myReader = cmdDataBase.ExecuteReader();
+            dataGridView1.DataSource = ListaAlunos(); //atualiza o datagridView
+
+            while (myReader.Read())
+            {
+
+            }
+            conDatabase.Close();
+
+
+            /*
+            DataTable dt = new DataTable();
+            string connString = ConfigurationManager.ConnectionStrings["2tia"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(connString))
+            {
+                using (MySqlCommand cmd = new MySqlCommand("INSERT INTO cadastro(nome, email, curso)" +
+                    "VALUES('" + textBox1.Text + "','" + textBox2.Text + "','" + textBox3.Text + "')", con))
+                {
+                    con.Open();
+                    MySqlDataReader rd = cmd.ExecuteReader();
+                    rd.Close();
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            MessageBox.Show("Dados inserido com sucesso!");
+                            rd.Close();
+                            con.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Dados não foram inseridos!");
+                            con.Close();
+                        }
+                    }catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    dt.Load(rd);
+                    con.Close();
+                }
+            } */
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            selectedRow = e.RowIndex;
+            DataGridViewRow row = dataGridView1.Rows[selectedRow];
+
+            identificador = row.Cells[0].Value.ToString();
+            textBox1.Text = row.Cells[1].Value.ToString();
+            textBox2.Text = row.Cells[2].Value.ToString();
+            textBox3.Text = row.Cells[3].Value.ToString();
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+           DataTable dt = new DataTable();
+            string connString = ConfigurationManager.ConnectionStrings["2tia"].ConnectionString;
+            using (MySqlConnection con = new MySqlConnection(connString))
+            {
+                int idd = Convert.ToInt32(identificador);
+                using (MySqlCommand cmd = new MySqlCommand("UPDATE cadastro SET nome=@nome, email=@email, curso=@curso WHERE idAluno=" + idd,con))
+                        {
+                cmd.Parameters.AddWithValue("@nome", textBox1.Text);
+                cmd.Parameters.AddWithValue("@email", textBox2.Text);
+                cmd.Parameters.AddWithValue("@curso", textBox3.Text);
+                con.Open();
+                MySqlDataReader reader = cmd.ExecuteReader();
+                dt.Load(reader);
+                reader.Close();
+                dataGridView1.DataSource = ListaAlunos();
+                
+
+            }
+            }
+        }
+    }
+}
+
+
+

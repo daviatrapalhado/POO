@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+namespace fabiano
+{
+public partial class Form1 : Form
+{
+DataTable table = new DataTable();
+int selectRow;
+public Form1()
+{
+InitializeComponent();
+table.Columns.Add(&quot;Nome do Vendedor&quot;, typeof(string));
+table.Columns.Add(&quot;codigo do Vendedor&quot;, typeof(int));
+table.Columns.Add(&quot;Nome do Produto&quot;, typeof(string));
+table.Columns.Add(&quot;Descricao&quot;, typeof(string));
+table.Columns.Add(&quot;Unidade&quot;, typeof(int));
+table.Columns.Add(&quot;Valor unitario&quot;, typeof(int));
+table.Rows.Add(&quot;Fabiano Souza&quot;, 1, &quot;Chuteira&quot;, &quot;Boa&quot;, 1, 1010);
+dataGridView1.DataSource = table;
+}
+private void Form1_Load(object sender, EventArgs e)
+{
+}
+private void label3_Click(object sender, EventArgs e)
+{
+}
+
+private void label6_Click(object sender, EventArgs e)
+{
+}
+private void label2_Click(object sender, EventArgs e)
+{
+}
+private void button1_Click(object sender, EventArgs e)
+{
+table.Rows.Add(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text, textBox5.Text,
+textBox6.Text);
+dataGridView1.DataSource = table;
+}
+private void textBox1_TextChanged(object sender, EventArgs e)
+{
+}
+}
+}
